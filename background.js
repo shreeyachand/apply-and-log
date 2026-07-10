@@ -28,7 +28,7 @@ async function logToNotion(data) {
   }
 
   properties['Status'] = {
-    status: { name: 'Submitted' },
+    status: { name: data.status || 'Submitted' },
   };
 
   if (data.location) {

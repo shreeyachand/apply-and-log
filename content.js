@@ -104,6 +104,8 @@ function scrapeJobPosting() {
     }
   }
 
+  data.location = normalizeLocation(data.location);
+
   const descSelectors = [
     '.job-content',
     '[class*="description"]', '[class*="Description"]',
@@ -123,7 +125,40 @@ function scrapeJobPosting() {
     data.description = data.description.substring(0, 2000) + '...';
   }
 
+  data.location = normalizeLocation(data.location);
   return data;
+}
+
+function normalizeLocation(loc) {
+  if (!loc) return '';
+  const s = loc.toLowerCase().trim();
+
+  const rules = [
+    [/^(new\s+york|nyc|ny|new\s+york\s+city|manhattan|brooklyn)/, 'NYC'],
+    [/^(san\s+francisco|sf|bay\s+area|bay|sf\/bay|south\s+bay|east\s+bay|silicon\s+valley)/, 'SF/Bay'],
+    [/^(los\s+angeles|la|l\.a\.|santa\s+monica)/, 'LA'],
+    [/^(washington\s+dc|dc|d\.c\.|washington)/, 'DC'],
+    [/^(dmv|maryland|virginia|arlington|alexandria)/, 'DMV'],
+    [/^(boston|cambridge|massachusetts|ma)/, 'Boston'],
+    [/^(chicago|illinois|il)/, 'Chicago'],
+    [/^(seattle|bellevue|redmond|washington\s+state|wa)/, 'Seattle'],
+    [/^(pittsburgh|pitt|pa|pennsylvania)/, 'Pittsburgh'],
+    [/^(dublin|ireland)/, 'Dublin'],
+    [/^(toronto|ontario|canada)/, 'Toronto'],
+    [/^(atlanta|georgia|ga)/, 'Atlanta'],
+    [/^(raleigh|durham|chapel\s+hill|north\s+carolina|nc|research\s+triangle)/, 'Raleigh/NC'],
+    [/^(denver|colorado|co|boulder)/, 'CO'],
+    [/^(austin|dallas|houston|texas|tx)/, 'Texas'],
+    [/^(portland|oregon|or)/, 'Oregon'],
+    [/^(st\.?\s*louis|saint\s+louis|stl)/, 'STL'],
+    [/^remote/, 'Remote'],
+  ];
+
+  for (const [regex, replacement] of rules) {
+    if (regex.test(s)) return replacement;
+  }
+
+  return loc;
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

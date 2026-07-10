@@ -25,9 +25,10 @@ h1 {
 
 .field {
   margin-bottom: 12px;
+  position: relative;
 }
 
-label {
+.field > label {
   display: block;
   font-size: 11px;
   font-weight: 600;
@@ -69,6 +70,168 @@ input[readonly] {
   cursor: default;
 }
 
+/* Custom Select (Status) */
+.custom-select {
+  position: relative;
+}
+
+.select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid #d2d2d7;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  text-align: left;
+}
+
+.select-trigger:hover {
+  border-color: #b8b8b8;
+}
+
+.select-trigger:focus,
+.select-trigger.open {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+  outline: none;
+}
+
+.select-trigger .value-text {
+  flex: 1;
+}
+
+.select-trigger .chevron {
+  transition: transform 0.2s;
+  opacity: 0.5;
+}
+
+.select-trigger.open .chevron {
+  transform: rotate(180deg);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.dot.not-started { background: #f5d700; }
+.dot.recruiter-screen { background: #ff8ebd; }
+.dot.interview { background: #ff8ebd; }
+.dot.assessment { background: #ff8ebd; }
+.dot.in-progress { background: #3b82f6; }
+.dot.submitted { background: #22c55e; }
+.dot.offer { background: #a855f7; }
+.dot.rejected { background: #ef4444; }
+
+.dot.nyc { background: #f5d700; }
+.dot.pittsburgh { background: #d98a5b; }
+.dot.la { background: #a855f7; }
+.dot.dmv { background: #8e8e93; }
+.dot.sf-bay { background: #ff8ebd; }
+.dot.dublin { background: #22c55e; }
+.dot.chicago { background: #f59e0b; }
+.dot.seattle { background: #3b82f6; }
+.dot.boston { background: #8e8e93; }
+.dot.raleigh-nc { background: #ef4444; }
+.dot.oregon { background: #ff8ebd; }
+.dot.texas { background: #8e8e93; }
+.dot.dc { background: #8e8e93; }
+.dot.toronto { background: #f59e0b; }
+.dot.co { background: #22c55e; }
+.dot.atlanta { background: #22c55e; }
+.dot.stl { background: #22c55e; }
+.dot.remote { background: #f5d700; }
+
+.select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 100;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.select-dropdown.open {
+  display: block;
+}
+
+.select-dropdown .option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.1s;
+}
+
+.select-dropdown .option:first-child {
+  border-radius: 7px 7px 0 0;
+}
+
+.select-dropdown .option:last-child {
+  border-radius: 0 0 7px 7px;
+}
+
+.select-dropdown .option:hover {
+  background: #f5f5f7;
+}
+
+.select-dropdown .option.selected {
+  background: #e8f0fe;
+  font-weight: 500;
+}
+
+/* Searchable Select (Location) */
+.searchable-select {
+  position: relative;
+}
+
+.searchable-select .search-input {
+  padding-right: 28px;
+}
+
+.searchable-select .search-input:focus + .select-dropdown,
+.searchable-select .select-dropdown.open {
+  display: block;
+}
+
+.searchable-select .select-dropdown {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.searchable-select .select-dropdown .option.hidden {
+  display: none;
+}
+
+.searchable-select .select-dropdown .option.no-results {
+  color: #6e6e73;
+  font-style: italic;
+  cursor: default;
+}
+
+.searchable-select .select-dropdown .option.no-results:hover {
+  background: transparent;
+}
+
+/* Checkboxes */
 .checkbox-group {
   display: flex;
   gap: 16px;
@@ -86,7 +249,7 @@ input[readonly] {
   font-weight: 400;
 }
 
-button {
+button[type="submit"] {
   width: 100%;
   padding: 10px;
   background: #0071e3;
@@ -100,27 +263,27 @@ button {
   margin-top: 4px;
 }
 
-button:hover {
+button[type="submit"]:hover {
   background: #0077ED;
 }
 
-button:disabled {
+button[type="submit"]:disabled {
   background: #b8b8b8;
   cursor: not-allowed;
 }
 
-#status {
+#status-msg {
   margin-top: 10px;
   font-size: 13px;
   text-align: center;
   min-height: 20px;
 }
 
-#status.success {
+#status-msg.success {
   color: #30d158;
 }
 
-#status.error {
+#status-msg.error {
   color: #ff453a;
 }
 

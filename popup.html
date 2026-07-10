@@ -17,8 +17,52 @@
         <input type="text" id="company" required placeholder="e.g. Google">
       </div>
       <div class="field">
-        <label for="location">Location</label>
-        <input type="text" id="location" placeholder="e.g. NYC, SF/Bay, Remote">
+        <label>Status</label>
+        <div class="custom-select" id="status-select">
+          <input type="hidden" id="status" value="Submitted">
+          <button class="select-trigger" type="button" data-value="Submitted">
+            <span class="dot submitted"></span>
+            <span class="value-text">Submitted</span>
+            <svg class="chevron" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          </button>
+          <div class="select-dropdown">
+            <div class="option" data-value="Not started"><span class="dot not-started"></span>Not started</div>
+            <div class="option" data-value="Recruiter Screen"><span class="dot recruiter-screen"></span>Recruiter Screen</div>
+            <div class="option" data-value="Interview"><span class="dot interview"></span>Interview</div>
+            <div class="option" data-value="Assessment"><span class="dot assessment"></span>Assessment</div>
+            <div class="option" data-value="In progress"><span class="dot in-progress"></span>In progress</div>
+            <div class="option" data-value="Submitted"><span class="dot submitted"></span>Submitted</div>
+            <div class="option" data-value="OFFER!"><span class="dot offer"></span>OFFER!</div>
+            <div class="option" data-value="Rejected"><span class="dot rejected"></span>Rejected</div>
+            <div class="option" data-value="Rejected - Eligibility"><span class="dot rejected"></span>Rejected - Eligibility</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <div class="searchable-select" id="location-select">
+          <input type="text" class="search-input" id="location" placeholder="Type to search or add..." autocomplete="off">
+          <div class="select-dropdown">
+            <div class="option" data-value="NYC"><span class="dot nyc"></span>NYC</div>
+            <div class="option" data-value="Pittsburgh"><span class="dot pittsburgh"></span>Pittsburgh</div>
+            <div class="option" data-value="LA"><span class="dot la"></span>LA</div>
+            <div class="option" data-value="DMV"><span class="dot dmv"></span>DMV</div>
+            <div class="option" data-value="SF/Bay"><span class="dot sf-bay"></span>SF/Bay</div>
+            <div class="option" data-value="Dublin"><span class="dot dublin"></span>Dublin</div>
+            <div class="option" data-value="Chicago"><span class="dot chicago"></span>Chicago</div>
+            <div class="option" data-value="Seattle"><span class="dot seattle"></span>Seattle</div>
+            <div class="option" data-value="Boston"><span class="dot boston"></span>Boston</div>
+            <div class="option" data-value="Raleigh/NC"><span class="dot raleigh-nc"></span>Raleigh/NC</div>
+            <div class="option" data-value="Oregon"><span class="dot oregon"></span>Oregon</div>
+            <div class="option" data-value="Texas"><span class="dot texas"></span>Texas</div>
+            <div class="option" data-value="DC"><span class="dot dc"></span>DC</div>
+            <div class="option" data-value="Toronto"><span class="dot toronto"></span>Toronto</div>
+            <div class="option" data-value="CO"><span class="dot co"></span>CO</div>
+            <div class="option" data-value="Atlanta"><span class="dot atlanta"></span>Atlanta</div>
+            <div class="option" data-value="STL"><span class="dot stl"></span>STL</div>
+            <div class="option" data-value="Remote"><span class="dot remote"></span>Remote</div>
+          </div>
+        </div>
       </div>
       <div class="field">
         <label>Source</label>
@@ -40,7 +84,7 @@
         <input type="text" id="url" readonly>
       </div>
       <button type="submit" id="submit-btn">Log to Notion</button>
-      <div id="status"></div>
+      <div id="status-msg"></div>
     </form>
     <div class="footer">
       <a href="#" id="open-options">Settings</a>
