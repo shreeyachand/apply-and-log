@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Apply & Log</h1>
+    <form id="log-form">
+      <div class="field">
+        <label for="name">Job Title</label>
+        <input type="text" id="name" required placeholder="e.g. Software Engineering Intern">
+      </div>
+      <div class="field">
+        <label for="company">Company</label>
+        <input type="text" id="company" required placeholder="e.g. Google">
+      </div>
+      <div class="field">
+        <label for="location">Location</label>
+        <input type="text" id="location" placeholder="e.g. NYC, SF/Bay, Remote">
+      </div>
+      <div class="field">
+        <label>Source</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" id="source-event"> event/program</label>
+          <label><input type="checkbox" id="source-handshake"> handshake</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="deadline">Application Deadline</label>
+        <input type="date" id="deadline">
+      </div>
+      <div class="field">
+        <label for="notes">Notes</label>
+        <textarea id="notes" rows="3" placeholder="Any notes about this application..."></textarea>
+      </div>
+      <div class="field">
+        <label for="url">URL</label>
+        <input type="text" id="url" readonly>
+      </div>
+      <button type="submit" id="submit-btn">Log to Notion</button>
+      <div id="status"></div>
+    </form>
+    <div class="footer">
+      <a href="#" id="open-options">Settings</a>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
