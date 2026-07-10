@@ -41,6 +41,9 @@ h1 {
 input[type="text"],
 input[type="url"],
 input[type="date"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
 textarea {
   width: 100%;
   padding: 8px 10px;
@@ -70,7 +73,7 @@ input[readonly] {
   cursor: default;
 }
 
-/* Custom Select (Status) */
+/* Custom Select (Status / Select) */
 .custom-select {
   position: relative;
 }
@@ -124,34 +127,6 @@ input[readonly] {
   display: inline-block;
 }
 
-.dot.not-started { background: #f5d700; }
-.dot.recruiter-screen { background: #ff8ebd; }
-.dot.interview { background: #ff8ebd; }
-.dot.assessment { background: #ff8ebd; }
-.dot.in-progress { background: #3b82f6; }
-.dot.submitted { background: #22c55e; }
-.dot.offer { background: #a855f7; }
-.dot.rejected { background: #ef4444; }
-
-.dot.nyc { background: #f5d700; }
-.dot.pittsburgh { background: #d98a5b; }
-.dot.la { background: #a855f7; }
-.dot.dmv { background: #8e8e93; }
-.dot.sf-bay { background: #ff8ebd; }
-.dot.dublin { background: #22c55e; }
-.dot.chicago { background: #f59e0b; }
-.dot.seattle { background: #3b82f6; }
-.dot.boston { background: #8e8e93; }
-.dot.raleigh-nc { background: #ef4444; }
-.dot.oregon { background: #ff8ebd; }
-.dot.texas { background: #8e8e93; }
-.dot.dc { background: #8e8e93; }
-.dot.toronto { background: #f59e0b; }
-.dot.co { background: #22c55e; }
-.dot.atlanta { background: #22c55e; }
-.dot.stl { background: #22c55e; }
-.dot.remote { background: #f5d700; }
-
 .select-dropdown {
   display: none;
   position: absolute;
@@ -198,7 +173,7 @@ input[readonly] {
   font-weight: 500;
 }
 
-/* Searchable Select (Location) */
+/* Searchable Select (multi_select with many options) */
 .searchable-select {
   position: relative;
 }
@@ -231,10 +206,11 @@ input[readonly] {
   background: transparent;
 }
 
-/* Checkboxes */
+/* Checkbox groups (multi_select with few options) */
 .checkbox-group {
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .checkbox-group label {
