@@ -43,4 +43,4 @@ The `DB_ID` is the 32-character hex string after the workspace name.
 2. click the extension icon
 3. review autofilled fields (title, company, location from URL)
 4. edit as needed — status, location, source, deadline, notes
-5. click **Log to Notion**
+5. click **Log to Notion**# ehebclt-crm
