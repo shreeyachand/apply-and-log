@@ -72,8 +72,11 @@ function buildStatusField(key, options) {
   container.className = 'custom-select';
   container.id = 'cs-' + key;
 
+  const hiddenInput = makeEl('input', { type: 'hidden', id: 'f-' + key, dataPropKey: key, value: '' });
+
   const defaultVal = options.find(o => o.name === 'Submitted') || options[0] || { name: '' };
   const dotColor = notionColor(defaultVal.color);
+  hiddenInput.value = defaultVal.name;
 
   const trigger = makeEl('button', { type: 'button', className: 'select-trigger', dataValue: defaultVal.name, id: 'tr-' + key },
     makeEl('span', { className: 'dot', style: { background: dotColor } }),
@@ -94,7 +97,7 @@ function buildStatusField(key, options) {
     dropdown.appendChild(item);
   }
 
-  container.append(trigger, dropdown);
+  container.append(hiddenInput, trigger, dropdown);
   wrapper.appendChild(container);
   return wrapper;
 }
@@ -417,11 +420,14 @@ function initCustomSelect(containerId) {
     }
   });
 
+  const hiddenInput = container.querySelector('input[type="hidden"]');
+
   dropdown.querySelectorAll('.option').forEach((opt) => {
     opt.addEventListener('click', () => {
       const val = opt.dataset.value;
       trigger.dataset.value = val;
       trigger.querySelector('.value-text').textContent = val;
+      if (hiddenInput) hiddenInput.value = val;
       const dot = opt.querySelector('.dot');
       const triggerDot = trigger.querySelector('.dot');
       if (dot && triggerDot) {
