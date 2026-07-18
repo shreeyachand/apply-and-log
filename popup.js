@@ -5,6 +5,7 @@ const NOTION_COLORS = {
 };
 
 let scrapedUrl = '';
+let currentSchema = null;
 
 function findProp(properties, ...patterns) {
   for (const [key, prop] of Object.entries(properties)) {
@@ -499,6 +500,114 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// --- Draft persistence ---
+
+const MAX_DRAFTS = 20;
+
+function getFormData(schema) {
+  const data = {};
+  for (const [key, prop] of Object.entries(schema)) {
+    if (skipType(prop.type)) continue;
+    const input = document.getElementById('f-' + key);
+    if (!input) {
+      const cbs = document.querySelectorAll('.ms-cb[data-prop-key="' + CSS.escape(key) + '"]');
+      if (cbs.length > 0) {
+        const selected = Array.from(cbs).filter(cb => cb.checked).map(cb => cb.dataset.option);
+        if (selected.length > 0) data[key] = selected;
+      }
+      const ss = document.querySelector('#ss-' + CSS.escape(key) + ' .search-input');
+      if (ss && ss.value) {
+        data[key] = ss.value;
+      }
+      continue;
+    }
+    let value;
+    if (prop.type === 'checkbox') {
+      value = input.checked;
+    } else if (prop.type === 'number') {
+      value = input.value !== '' ? parseFloat(input.value) : '';
+    } else {
+      value = input.value;
+    }
+    if (value !== '' && value !== null && value !== undefined) {
+      data[key] = value;
+    }
+  }
+  return data;
+}
+
+function saveDraft(url, schema) {
+  if (!url || !schema) return;
+  const data = getFormData(schema);
+  if (Object.keys(data).length === 0) return;
+  const key = 'draft_' + url;
+  chrome.storage.local.set({ [key]: data });
+  chrome.storage.local.get(null).then((items) => {
+    const keys = Object.keys(items).filter(k => k.startsWith('draft_'));
+    if (keys.length > MAX_DRAFTS) {
+      chrome.storage.local.remove(keys.slice(MAX_DRAFTS));
+    }
+  });
+}
+
+function clearDraft(url) {
+  if (!url) return;
+  chrome.storage.local.remove('draft_' + url);
+}
+
+async function loadDraft(url) {
+  if (!url) return null;
+  const key = 'draft_' + url;
+  const { [key]: entry } = await chrome.storage.local.get(key);
+  return entry || null;
+}
+
+function applyDraft(data, schema) {
+  for (const [key, value] of Object.entries(data)) {
+    const prop = schema[key];
+    if (!prop || skipType(prop.type)) continue;
+    const input = document.getElementById('f-' + key);
+    if (!input) {
+      const cbs = document.querySelectorAll('.ms-cb[data-prop-key="' + CSS.escape(key) + '"]');
+      if (cbs.length > 0 && Array.isArray(value)) {
+        cbs.forEach(cb => { if (value.includes(cb.dataset.option)) cb.checked = true; });
+      }
+      const ss = document.querySelector('#ss-' + CSS.escape(key) + ' .search-input');
+      if (ss && typeof value === 'string') {
+        ss.value = value;
+      }
+      continue;
+    }
+    if (prop.type === 'checkbox') {
+      input.checked = Boolean(value);
+    } else if (prop.type === 'status' || prop.type === 'select') {
+      input.value = value;
+      const trigger = document.querySelector('#tr-' + CSS.escape(key));
+      if (trigger) {
+        trigger.dataset.value = value;
+        const vt = trigger.querySelector('.value-text');
+        if (vt) vt.textContent = value;
+        const dot = trigger.querySelector('.dot');
+        const dd = document.querySelector('#dd-' + CSS.escape(key));
+        if (dd) {
+          if (dot) {
+            const match = dd.querySelector('.option[data-value="' + CSS.escape(value) + '"]');
+            if (match) {
+              const matchDot = match.querySelector('.dot');
+              if (matchDot) dot.style.background = matchDot.style.background;
+            }
+          }
+          dd.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+          const match = dd.querySelector('.option[data-value="' + CSS.escape(value) + '"]');
+          if (match) match.classList.add('selected');
+        }
+      }
+    } else {
+      input.value = value;
+    }
+  }
+}
+
 // --- Main ---
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -524,11 +633,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   scrapedUrl = scraped.url;
+  currentSchema = schema;
 
   // Build form
   buildForm(schema, scraped);
   btn.disabled = false;
   btn.textContent = 'Log to Notion';
+
+  // Load saved draft for this URL
+  const draft = await loadDraft(scrapedUrl);
+  if (draft) {
+    applyDraft(draft, schema);
+  }
+
+  // Auto-save on changes
+  const form = document.getElementById('log-form');
+  form.addEventListener('input', () => saveDraft(scrapedUrl, currentSchema));
+  form.addEventListener('change', () => saveDraft(scrapedUrl, currentSchema));
+  form.addEventListener('click', (e) => {
+    if (e.target.closest('.custom-select .option') || e.target.closest('.searchable-select .option:not(.no-results)')) {
+      saveDraft(scrapedUrl, currentSchema);
+    }
+  });
 
   // Submit
   document.getElementById('log-form').addEventListener('submit', async (e) => {
@@ -544,6 +670,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (result.success) {
         statusMsg.textContent = 'Logged to Notion!';
         statusMsg.className = 'success';
+        clearDraft(scrapedUrl);
         setTimeout(() => window.close(), 1800);
       } else {
         statusMsg.textContent = 'Error: ' + (result.error || 'Unknown error');
