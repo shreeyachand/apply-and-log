@@ -4,6 +4,8 @@ i apologize i couldn't come up with a more creative name but happy recruiting se
 
 it is meant to autodetect your database's schema to render the form, and autofills certain fields (title, company, location) from the job posting url. you can edit any of the fields before logging to notion!
 
+<img width="1512" height="982" alt="Screenshot 2026-07-10 at 8 19 55 PM" src="https://github.com/user-attachments/assets/49005367-dd08-4950-93f6-71fd6eb9bc9a" />
+
 ## setup
 
 ### 0. set up your database
@@ -43,4 +45,4 @@ The `DB_ID` is the 32-character hex string after the workspace name.
 2. click the extension icon
 3. review autofilled fields (title, company, location from URL)
 4. edit as needed — status, location, source, deadline, notes
-5. click **Log to Notion**# ehebclt-crm
+5. click **Log to Notion**
